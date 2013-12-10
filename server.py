@@ -1,5 +1,6 @@
 import os
 from flask import Flask
+from flask import request
 import pdb
 #from flask.ext.sqlalchemy import SQLAlchemy
 
@@ -11,20 +12,9 @@ app = Flask(__name__)
 def hello():
     return 'Hello World!'
 
-@app.route('/sync_data', methods="POST")
+@app.route('/sync_data', methods=["POST"])
 def sync():
-    print "sync called"
-    print request.method
-    pdb.set_trace()
-    if request.method == "POST":
-        print "in if"
-        print request
-    elif request.method == "GET":
-        print "get"
-    else:
-        print "none"
-    print "past"
-    return "Data Recieved"
+    return "Data Received"
     
 
 if __name__ == '__main__':
