@@ -1,7 +1,5 @@
 import time
-import os
 from flask import Flask, request, json
-import pdb
 #from flask.ext.sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -9,38 +7,35 @@ app = Flask(__name__)
 #db = SQLAlchemy(app)
 
 
-lunch_requests = {}  # Maps phone numbers to lunch requests
+unsent_data = {}  # Maps phone numbers to data that still needs to be sent
 
 
 @app.route('/')
 def hello():
     return 'Hello World!'
 
+
 @app.route('/sync_data', methods=["GET"])
 def sync():
-    print "sync called"
-    print request.method
-    if request.method == "POST":
-        print "in if"
-        print request
-    elif request.method == "GET":
-        print "get"
-    else:
-        print "none"
-    print "past"
     return "Data Recieved"
     
 
 @app.route('/update', methods=["GET"])
 def update():
     identifier = request.args.get('identifier')
-    data = lunch_requests.pop(identifier, {})
+    data = unsent_data.pop(identifier, {})
     return json.dumps(data)
 
 
 @app.route('/test_add_data', methods=["GET"])
 def add_data():
-    lunch_requests["9876543210"] = {
+    unsent_data["9876543210"] = {
+        # Lunches should map to an array of dicts containing lunch info. These dicts contain the following keys:
+        # Time should be seconds since epoch (cast to int?)
+        # People should be list of strings, remove the person who this is being sent to from the list before
+        #   adding it to the unsent_data dict
+        # Place should be either a string or an index into our hardcoded list of restaurants,
+        #   but more likely just a string
         'lunches': [{'time': time.time(), 'people': ['Danny', 'Colorado', 'Avi', 'Lexi'], 'place': 'Sliver Pizzeria'}],
         'friend_invites': [],
     }
