@@ -23,8 +23,11 @@ def sync():
 @app.route('/update', methods=["GET"])
 def update():
     identifier = request.args.get('identifier')
-    data = unsent_data.pop(identifier, {})
-    return json.dumps(data)
+    data = unsent_data.pop(identifier, None)
+    if data is not None:
+        return json.dumps(data)
+    else:
+        return ""
 
 
 @app.route('/test_add_data', methods=["GET"])
@@ -36,11 +39,12 @@ def add_data():
         #   adding it to the unsent_data dict
         # Place should be either a string or an index into our hardcoded list of restaurants,
         #   but more likely just a string
-        'lunches': [{'time': time.time(), 'people': ['Danny', 'Colorado', 'Avi', 'Lexi'], 'place': 'Sliver Pizzeria'}],
+        'lunches': [{'time': int(time.time() * 1000), 'attendees': ['Danny', 'Colorado', 'Avi', 'Lexi'], 'location': 'Sliver Pizzeria'}],
         'friend_invites': [],
     }
     return "ok"
 
 
 if __name__ == '__main__':
+    #app.run(host='localhost', debug=True)
     app.run(host='0.0.0.0', debug=True)
